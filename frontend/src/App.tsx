@@ -32,7 +32,13 @@ type Tab =
   | "categories"
   | "accounts";
 
+type ThemeMode = "atelier" | "spyker";
+
 export function App() {
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    const saved = localStorage.getItem("finance_app_theme");
+    return saved === "spyker" ? "spyker" : "atelier";
+  });
   const [tab, setTab] = useState<Tab>("overview");
   const [period, setPeriod] = useState<"month" | "year" | "all">("month");
   const [availableMonths, setAvailableMonths] = useState<string[]>([]);
@@ -87,6 +93,11 @@ export function App() {
       setError(err instanceof Error ? err.message : "Failed to connect to backend API");
     }
   };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("finance_app_theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     setOnUnauthorized(() => {
@@ -148,36 +159,31 @@ export function App() {
     setSettingsOpen(false);
   };
 
+  const isSpyker = theme === "spyker";
+
   return (
     <div className="min-h-screen flex flex-col bg-surface text-on-surface relative">
-      {/* Editorial Upper Navigation Header */}
-      <header className="w-full border-b border-primary/15 bg-surface/90 backdrop-blur-sm sticky top-0 z-30">
+      {/* Editorial Upper Navigation Header (uniform layout across themes) */}
+      <header className="w-full sticky top-0 z-30 bg-primary text-white border-b border-primary-container transition-colors">
         <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button
-              className="flex items-center gap-3 group text-left"
+              className="flex items-center group text-left"
               onClick={() => setTab("overview")}
+              title="Overview"
               type="button"
             >
-              <div className="w-7 h-7 border border-primary flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-200">
-                <span className="font-display font-bold text-xs">AT</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold tracking-[0.2em] text-primary uppercase font-display">
-                  Aaron Thomas
-                </span>
-                <span className="text-[10px] text-on-surface-subtle tracking-wider font-medium uppercase">
-                  {primaryAccount?.name ?? "CommBank Smart Access"}
-                </span>
+              <div className="w-9 h-9 rounded-full border border-white/30 text-white flex items-center justify-center group-hover:bg-secondary group-hover:border-secondary transition-colors duration-200">
+                <span className="font-display font-bold text-xs tracking-wider">AT</span>
               </div>
             </button>
-            <div className="hidden xl:flex items-center gap-2 pl-4 border-l border-primary/15">
+            <div className="hidden xl:flex items-center gap-2 pl-4 border-l border-white/15">
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
                   error ? "bg-terracotta" : "bg-secondary"
                 }`}
               />
-              <span className="text-[11px] text-on-surface-variant tracking-wider uppercase font-medium">
+              <span className="text-[11px] tracking-wider uppercase font-medium text-white/70">
                 {error ? "API Offline" : `SQLite ${txCount} Synced`}
               </span>
             </div>
@@ -191,28 +197,56 @@ export function App() {
                 <button
                   key={item.id}
                   className={`group relative py-2 text-xs tracking-wider uppercase font-display transition-colors flex items-center gap-1.5 ${
-                    active
-                      ? "font-bold text-primary"
-                      : "font-semibold text-on-surface-variant hover:text-primary"
+                    active ? "font-bold text-white" : "font-semibold text-white/60 hover:text-white"
                   }`}
                   onClick={() => setTab(item.id)}
                   type="button"
                 >
                   <span>{item.label}</span>
                   {active ? (
-                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary" />
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-secondary" />
                   ) : (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-secondary" />
                   )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Right Action Tools: Import + Settings/Ledger Sidebar */}
-          <div className="flex items-center gap-3">
+          {/* Right Action Tools: Theme Switch + Import + Settings/Ledger Sidebar */}
+          <div className="flex items-center gap-2.5">
             <button
-              className="hidden sm:flex items-center gap-2 border border-primary/25 bg-surface-card px-3.5 py-2 hover:bg-surface-low transition-colors text-xs font-bold text-primary tracking-wider uppercase font-display"
+              role="switch"
+              aria-checked={isSpyker}
+              aria-label="Toggle theme between Forest and Spyker"
+              className="relative inline-flex items-center h-9 w-[124px] p-0.5 rounded-full border border-white/25 bg-primary-container transition-colors duration-300 select-none shrink-0"
+              onClick={() => setTheme(isSpyker ? "atelier" : "spyker")}
+              title="Switch visual theme"
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                className={`absolute top-0.5 bottom-0.5 left-0.5 w-[calc(50%-2px)] rounded-full bg-secondary transition-transform duration-300 ease-out ${
+                  isSpyker ? "translate-x-full" : "translate-x-0"
+                }`}
+              />
+              <span
+                className={`relative z-10 w-1/2 text-center text-[11px] font-bold tracking-wider uppercase font-display transition-colors duration-300 ${
+                  !isSpyker ? "text-white" : "text-white/60"
+                }`}
+              >
+                Forest
+              </span>
+              <span
+                className={`relative z-10 w-1/2 text-center text-[11px] font-bold tracking-wider uppercase font-display transition-colors duration-300 ${
+                  isSpyker ? "text-white" : "text-white/60"
+                }`}
+              >
+                Spyker
+              </span>
+            </button>
+            <button
+              className="hidden sm:inline-flex items-center justify-center gap-2 h-9 px-3.5 rounded-full bg-secondary text-white hover:bg-secondary-container hover:text-on-surface whitespace-nowrap transition-colors text-xs font-bold tracking-wider uppercase font-display"
               onClick={() => setImportOpen(true)}
               type="button"
             >
@@ -220,10 +254,10 @@ export function App() {
               <span>Import CSV</span>
             </button>
             <button
-              className={`flex items-center gap-2 border px-3.5 py-2 transition-colors text-xs font-bold tracking-wider uppercase font-display ${
+              className={`inline-flex items-center justify-center gap-2 h-9 px-3.5 rounded-full border whitespace-nowrap transition-colors text-xs font-bold tracking-wider uppercase font-display ${
                 tab === "transactions" || tab === "categories" || tab === "accounts" || settingsOpen
-                  ? "bg-primary text-white border-primary"
-                  : "border-primary/25 bg-surface-card text-primary hover:bg-surface-low"
+                  ? "bg-secondary text-white border-secondary"
+                  : "border-white/25 bg-primary-container text-white hover:border-white/50"
               }`}
               onClick={() => setSettingsOpen(true)}
               type="button"
@@ -233,7 +267,7 @@ export function App() {
             </button>
             {authRequired && (
               <button
-                className="border border-primary/25 bg-surface-card px-3 py-2 hover:bg-surface-low transition-colors text-xs font-bold text-on-surface-variant hover:text-primary tracking-wider uppercase font-display"
+                className="inline-flex items-center justify-center h-9 px-3 rounded-full border border-white/25 bg-primary-container text-white/80 hover:text-white whitespace-nowrap transition-colors text-xs font-bold tracking-wider uppercase font-display"
                 onClick={() => {
                   clearAuthToken();
                   setAuthenticated(false);
@@ -275,6 +309,7 @@ export function App() {
             }}
             recentTransactions={allTransactions}
             summary={summary}
+            theme={theme}
             trend={trend}
           />
         )}
@@ -303,7 +338,7 @@ export function App() {
       <footer className="w-full border-t border-primary/15 py-8 bg-surface">
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-on-surface-variant">
           <div className="flex items-center gap-4 font-medium">
-            <span>© 2026 Aaron Thomas</span>
+            <span>© 2026 AT</span>
             <span>•</span>
             <span>Personal Ledger</span>
           </div>

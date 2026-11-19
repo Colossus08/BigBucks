@@ -22,6 +22,7 @@ interface Props {
   onDataChanged: () => Promise<void>;
   onGoToTaxEngine: () => void;
   onGoToUncategorised: () => void;
+  theme?: "atelier" | "spyker";
 }
 
 function formatShortDate(iso: string): string {
@@ -50,6 +51,7 @@ export function Overview({
   trend,
   onGoToTaxEngine,
   onGoToUncategorised,
+  theme = "atelier",
 }: Props) {
   if (!summary) {
     return (
@@ -221,8 +223,8 @@ export function Overview({
 
       {/* Charts */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <SpendingDonut summary={summary} />
-        <IncomeVsExpenses trend={trend} summary={summary} onGoToTaxEngine={onGoToTaxEngine} />
+        <SpendingDonut summary={summary} theme={theme} />
+        <IncomeVsExpenses trend={trend} summary={summary} onGoToTaxEngine={onGoToTaxEngine} theme={theme} />
       </section>
     </div>
   );

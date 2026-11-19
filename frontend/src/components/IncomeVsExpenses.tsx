@@ -14,9 +14,18 @@ interface Props {
   trend: MonthlyTrendPoint[];
   summary: Summary;
   onGoToTaxEngine?: () => void;
+  theme?: "atelier" | "spyker";
 }
 
-export function IncomeVsExpenses({ trend, summary, onGoToTaxEngine }: Props) {
+export function IncomeVsExpenses({ trend, summary, onGoToTaxEngine, theme = "atelier" }: Props) {
+  const isSpyker = theme === "spyker";
+  const incomeFill = isSpyker ? "#000000" : "#7D9A83";
+  const spendFill = isSpyker ? "#C4C7C7" : "#C86452";
+  const savingsStroke = isSpyker ? "#8E4C39" : "#1B382B";
+  const gridStroke = isSpyker ? "#000000" : "#1B382B";
+  const tickColor = isSpyker ? "#444748" : "#5C6B61";
+  const yTickColor = isSpyker ? "#747878" : "#87968D";
+  const tickFont = isSpyker ? "Barlow Condensed" : "Space Grotesk";
   const chartData = trend.map((pt) => ({
     month: pt.month.slice(5) + "/" + pt.month.slice(2, 4),
     Income: pt.income_cents / 100,
@@ -45,16 +54,18 @@ export function IncomeVsExpenses({ trend, summary, onGoToTaxEngine }: Props) {
           </div>
           <div className="flex items-center gap-3 text-[11px] font-medium">
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 bg-secondary" />
+              <span className="w-2.5 h-2.5" style={{ backgroundColor: incomeFill }} />
               <span className="text-on-surface-variant font-semibold">Income</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 bg-terracotta/80" />
+              <span className="w-2.5 h-2.5" style={{ backgroundColor: spendFill }} />
               <span className="text-on-surface-variant font-semibold">Spend</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5 bg-primary" />
-              <span className="text-primary font-bold">Savings</span>
+              <span className="w-2.5 h-0.5" style={{ backgroundColor: savingsStroke }} />
+              <span className="font-bold" style={{ color: savingsStroke }}>
+                Savings
+              </span>
             </div>
           </div>
         </div>
@@ -77,36 +88,36 @@ export function IncomeVsExpenses({ trend, summary, onGoToTaxEngine }: Props) {
           <div className="w-full h-56">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={chartData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="2 2" stroke="#1B382B" strokeOpacity={0.1} />
+                <CartesianGrid strokeDasharray="2 2" stroke={gridStroke} strokeOpacity={0.1} />
                 <XAxis
                   dataKey="month"
-                  tick={{ fill: "#5C6B61", fontSize: 10, fontFamily: "Space Grotesk" }}
-                  axisLine={{ stroke: "#1B382B", strokeOpacity: 0.15 }}
+                  tick={{ fill: tickColor, fontSize: 10, fontFamily: tickFont }}
+                  axisLine={{ stroke: gridStroke, strokeOpacity: 0.15 }}
                   tickLine={false}
                 />
                 <YAxis
-                  tick={{ fill: "#87968D", fontSize: 10 }}
+                  tick={{ fill: yTickColor, fontSize: 10 }}
                   axisLine={false}
                   tickLine={false}
                   tickFormatter={(v: number) => `$${Math.round(v / 1000)}k`}
                 />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "#FAF8F5",
-                    borderColor: "#1B382B",
-                    borderRadius: 0,
+                    backgroundColor: isSpyker ? "#FFFFFF" : "#FAF8F5",
+                    borderColor: isSpyker ? "#000000" : "#1B382B",
+                    borderRadius: isSpyker ? 12 : 0,
                     fontSize: "12px",
                   }}
                   formatter={(val) => formatAudFromCents(Math.round(Number(val) * 100))}
                 />
-                <Bar dataKey="Income" fill="#7D9A83" barSize={16} />
-                <Bar dataKey="Spend" fill="#C86452" fillOpacity={0.8} barSize={16} />
+                <Bar dataKey="Income" fill={incomeFill} barSize={16} radius={isSpyker ? [2, 2, 0, 0] : 0} />
+                <Bar dataKey="Spend" fill={spendFill} fillOpacity={isSpyker ? 1 : 0.8} barSize={16} radius={isSpyker ? [2, 2, 0, 0] : 0} />
                 <Line
                   type="monotone"
                   dataKey="Savings"
-                  stroke="#1B382B"
+                  stroke={savingsStroke}
                   strokeWidth={2}
-                  dot={{ r: 3.5, fill: "#FFFFFF", stroke: "#1B382B", strokeWidth: 1.5 }}
+                  dot={{ r: 3.5, fill: isSpyker ? savingsStroke : "#FFFFFF", stroke: savingsStroke, strokeWidth: 1.5 }}
                 />
               </ComposedChart>
             </ResponsiveContainer>

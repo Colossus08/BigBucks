@@ -2,14 +2,17 @@ import { useState } from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Summary, formatAudFromCents } from "../api/client";
 
-const COLORS = ["#1B382B", "#7D9A83", "#C86452", "#B58D4E", "#4A6B5D", "#87968D", "#5C6B61"];
+const FOREST_COLORS = ["#1B382B", "#7D9A83", "#C86452", "#B58D4E", "#4A6B5D", "#87968D", "#5C6B61"];
+const SPYKER_COLORS = ["#000000", "#8E4C39", "#FFB59F", "#747878", "#C4C7C7", "#444748", "#1C1B1B"];
 
 interface Props {
   summary: Summary;
+  theme?: "atelier" | "spyker";
 }
 
-export function SpendingDonut({ summary }: Props) {
+export function SpendingDonut({ summary, theme = "atelier" }: Props) {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const colors = theme === "spyker" ? SPYKER_COLORS : FOREST_COLORS;
 
   const groupData = Object.entries(summary.by_group).map(([name, totalCents]) => ({
     name,
@@ -76,16 +79,16 @@ export function SpendingDonut({ summary }: Props) {
                     {data.map((entry, idx) => (
                       <Cell
                         key={entry.name}
-                        fill={COLORS[idx % COLORS.length]}
+                        fill={colors[idx % colors.length]}
                         style={{ cursor: selectedGroup ? "default" : "pointer" }}
                       />
                     ))}
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#FAF8F5",
-                      borderColor: "#1B382B",
-                      borderRadius: 0,
+                      backgroundColor: theme === "spyker" ? "#FFFFFF" : "#FAF8F5",
+                      borderColor: theme === "spyker" ? "#000000" : "#1B382B",
+                      borderRadius: theme === "spyker" ? 12 : 0,
                       fontSize: "12px",
                     }}
                     formatter={(val) => formatAudFromCents(Math.round(Number(val) * 100))}
@@ -110,7 +113,7 @@ export function SpendingDonut({ summary }: Props) {
                     <span className="flex items-center gap-2 font-medium text-primary">
                       <span
                         className="w-2.5 h-2.5 shrink-0"
-                        style={{ backgroundColor: COLORS[idx % COLORS.length] }}
+                        style={{ backgroundColor: colors[idx % colors.length] }}
                       />
                       <span>{item.name}</span>
                     </span>

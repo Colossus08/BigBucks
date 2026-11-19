@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="atelier">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Work+Sans:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link
@@ -21,28 +21,28 @@
         theme: {
           extend: {
             colors: {
-              primary: "#1B382B",
-              "primary-container": "#244837",
-              "primary-light": "#E9EFE9",
-              secondary: "#7D9A83",
-              "secondary-container": "#A3B899",
-              terracotta: "#C86452",
-              "terracotta-light": "#FAECE9",
-              "warm-gold": "#D4A359",
-              "warm-gold-light": "#FAF4E9",
-              surface: "#FAF8F5",
-              "surface-low": "#F4EFE6",
-              "surface-card": "#FFFFFF",
-              "surface-dim": "#EDE8DE",
-              outline: "#D7D0C3",
-              "outline-dark": "#1B382B",
-              "on-surface": "#14261C",
-              "on-surface-variant": "#5C6B61",
-              "on-surface-subtle": "#87968D",
+              primary: "var(--color-primary)",
+              "primary-container": "var(--color-primary-container)",
+              "primary-light": "var(--color-primary-light)",
+              secondary: "var(--color-secondary)",
+              "secondary-container": "var(--color-secondary-container)",
+              terracotta: "var(--color-terracotta)",
+              "terracotta-light": "var(--color-terracotta-light)",
+              "warm-gold": "var(--color-warm-gold)",
+              "warm-gold-light": "var(--color-warm-gold-light)",
+              surface: "var(--color-surface)",
+              "surface-low": "var(--color-surface-low)",
+              "surface-card": "var(--color-surface-card)",
+              "surface-dim": "var(--color-surface-dim)",
+              outline: "var(--color-outline)",
+              "outline-dark": "var(--color-outline-dark)",
+              "on-surface": "var(--color-on-surface)",
+              "on-surface-variant": "var(--color-on-surface-variant)",
+              "on-surface-subtle": "var(--color-on-surface-subtle)",
             },
             fontFamily: {
-              sans: ['"Inter"', "sans-serif"],
-              display: ['"Space Grotesk"', "sans-serif"],
+              sans: ["var(--font-sans)"],
+              display: ["var(--font-display)"],
             },
           },
         },
