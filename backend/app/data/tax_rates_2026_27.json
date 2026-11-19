@@ -1,0 +1,12 @@
+{
+  "tax_year": "2026-27",
+  "currency": "AUD",
+  "medicare_levy_rate": "0.02",
+  "brackets": [
+    { "min": "0", "max": "18200", "rate": "0.00", "base_tax": "0" },
+    { "min": "18200", "max": "45000", "rate": "0.16", "base_tax": "0" },
+    { "min": "45000", "max": "135000", "rate": "0.30", "base_tax": "4288" },
+    { "min": "135000", "max": "190000", "rate": "0.37", "base_tax": "31288" },
+    { "min": "190000", "max": null, "rate": "0.45", "base_tax": "51638" }
+  ]
+}

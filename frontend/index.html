@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FALTER // CommBank Personal Ledger</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#1B382B",
+              "primary-container": "#244837",
+              "primary-light": "#E9EFE9",
+              secondary: "#7D9A83",
+              "secondary-container": "#A3B899",
+              terracotta: "#C86452",
+              "terracotta-light": "#FAECE9",
+              "warm-gold": "#D4A359",
+              "warm-gold-light": "#FAF4E9",
+              surface: "#FAF8F5",
+              "surface-low": "#F4EFE6",
+              "surface-card": "#FFFFFF",
+              "surface-dim": "#EDE8DE",
+              outline: "#D7D0C3",
+              "outline-dark": "#1B382B",
+              "on-surface": "#14261C",
+              "on-surface-variant": "#5C6B61",
+              "on-surface-subtle": "#87968D",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "sans-serif"],
+              display: ['"Space Grotesk"', "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+  <body class="bg-surface text-on-surface antialiased selection:bg-secondary selection:text-white relative min-h-screen font-sans">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
